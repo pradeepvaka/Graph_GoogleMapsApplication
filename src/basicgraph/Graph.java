@@ -122,7 +122,12 @@ public abstract class Graph {
 	 */
 	public List<Integer> degreeSequence() {
 		// XXX: Implement in part 1 of week 2
-		return null;
+		List<Integer> vals = new ArrayList<Integer>();
+		for(int nv = 0;nv<numVertices; nv++) {
+			vals.add(getNeighbors(nv).size() + getInNeighbors(nv).size());
+		}
+		Collections.sort(vals,Collections.reverseOrder());
+		return vals ;
 	}
 	
 	/**
@@ -258,12 +263,29 @@ public abstract class Graph {
 		System.out.println("Observe most degrees are small (1-30), eight are over 100.");
 		System.out.println("****");
 		
+		
+		 
+				
 		//For testing Part 2 functionality
 		// Test your distance2 code here.
 		System.out.println("Testing distance-two methods on sample graphs...");
 		System.out.println("Goal: implement method using two approaches.");
 
-
+		System.out.println("Simple Test data:");
+		GraphAdjList simpleTestGraph = new GraphAdjList();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestGraph);
+		System.out.println(simpleTestGraph);
+		//System.out.println("Observe most degrees are small (1-30), eight are over 100.");
+		System.out.println(simpleTestGraph.getDistance2(3));
+		System.out.println("********");
+		
+		System.out.println("Simple Test data:");
+		GraphAdjMatrix simpleTestGraphMatrix = new GraphAdjMatrix();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestGraphMatrix);
+		System.out.println(simpleTestGraphMatrix);
+		//System.out.println("Observe most degrees are small (1-30), eight are over 100.");
+		System.out.println(simpleTestGraphMatrix.getDistance2(3));
+		System.out.println("****");
 		
 	}
 }
