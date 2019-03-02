@@ -11,9 +11,16 @@ package roadgraph;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.ArrayList;
 import geography.GeographicPoint;
 import util.GraphLoader;
+import roadgraph.MapNode;
+import roadgraph.MapEdge;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author UCSD MOOC development team and YOU
@@ -25,13 +32,14 @@ import util.GraphLoader;
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 3
 	
-	
+	private Map<GeographicPoint,MapNode> adjList;
 	/** 
 	 * Create a new empty MapGraph 
 	 */
 	public MapGraph()
 	{
 		// TODO: Implement in this constructor in WEEK 3
+		adjList = new HashMap<GeographicPoint,MapNode>();
 	}
 	
 	/**
@@ -41,7 +49,8 @@ public class MapGraph {
 	public int getNumVertices()
 	{
 		//TODO: Implement this method in WEEK 3
-		return 0;
+		
+		return adjList.keySet().size();
 	}
 	
 	/**
@@ -51,7 +60,8 @@ public class MapGraph {
 	public Set<GeographicPoint> getVertices()
 	{
 		//TODO: Implement this method in WEEK 3
-		return null;
+		//if we implement adjacency list representation, then the keys set is the answer.
+		return adjList.keySet();
 	}
 	
 	/**
@@ -61,7 +71,11 @@ public class MapGraph {
 	public int getNumEdges()
 	{
 		//TODO: Implement this method in WEEK 3
-		return 0;
+		int numEdges=0;
+		for(GeographicPoint p: adjList.keySet()) {
+			numEdges+= adjList.get(p).numEdges();
+		}
+		return numEdges;
 	}
 
 	
@@ -76,7 +90,12 @@ public class MapGraph {
 	public boolean addVertex(GeographicPoint location)
 	{
 		// TODO: Implement this method in WEEK 3
-		return false;
+		if(adjList.containsKey(location)==true || location == null) return false;
+		else {
+			adjList.put(location, new MapNode(location));
+			return true;
+		}
+		
 	}
 	
 	/**
@@ -95,6 +114,14 @@ public class MapGraph {
 			String roadType, double length) throws IllegalArgumentException {
 
 		//TODO: Implement this method in WEEK 3
+		
+		if((adjList.containsKey(from)==false) || (adjList.containsKey(to)==false) || (from == null) || (to ==null) || 
+				 length <0) throw new IllegalArgumentException("incorrect arguments passed");
+		
+		
+		
+		MapEdge me = new MapEdge(from,to,roadName,length,roadType);
+		adjList.get(from).addEdge(me);
 		
 	}
 	
@@ -127,7 +154,12 @@ public class MapGraph {
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
+		
+		HashSet<GeographicPoint> visted = new HashSet<GeographicPoint>();
+		List<Integer> dist = new ArrayList<Integer>();
+		Queue<GeographicPoint> bfsq = new LinkedList<GeographicPoint>();
 
+		
 		return null;
 	}
 	
