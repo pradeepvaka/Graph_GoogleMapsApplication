@@ -8,20 +8,60 @@ import geography.GeographicPoint;
 
 public class MapEdge {
 
-	private GeographicPoint startv,endv;
-	private String roadname;
-	private String roadt;
-	private double roadl;
-	
-	public MapEdge(GeographicPoint startv, GeographicPoint endv, String stname,
-			double roadlen, String roadtype) {
-		
-		startv = new GeographicPoint(startv.x,startv.y);
-		endv = new GeographicPoint(endv.x,endv.y);
-		roadname = stname;
-		roadt = roadtype;
-		roadl = roadlen;
-		
-		
-	}
+	private GeographicPoint from;
+    private GeographicPoint to;
+    private String roadname;
+    private String roadType;
+    private double length;
+
+    public MapEdge(GeographicPoint from, GeographicPoint to,
+                   String roadname, String roadType, double length) {
+    	
+            this.from = from;
+            this.to = to;
+            this.roadname = roadname;
+            this.roadType = roadType;
+            this.length = length;
+      
+    }
+
+    /**
+     * Getter for starting location point
+     * @return GeogrphicPoint
+     */
+    public GeographicPoint getFrom() {
+        return from;
+    }
+
+    /**
+     * Getter for ending location point
+     * @return GeogrphicPoint
+     */
+    public GeographicPoint getTo() {
+        return to;
+    }
+
+    /**
+     * Getter for name of edge
+     * @return String roadname
+     */
+    public String getRoadname() {
+        return roadname;
+    }
+
+    /**
+     * Getter for type of edge
+     * @return String roadType
+     */
+    public String getRoadType() {
+        return roadType;
+    }
+
+    /**
+     * Getter for length of edge
+     * @return String length
+     */
+    public double getLength() {
+        return length;
+    }
 }
