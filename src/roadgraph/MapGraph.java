@@ -15,9 +15,11 @@ import java.util.function.Consumer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import geography.GeographicPoint;
 import util.GraphLoader;
@@ -255,7 +257,43 @@ public class MapGraph {
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 4
-
+		MapNode startnode = nodes.get(start);
+		MapNode goalnode = nodes.get(goal);
+		Map<MapNode,Double> distances = new HashMap<>();
+		HashMap<MapNode,MapNode> parentMap= new HashMap<>();
+		Set<MapNode> visited = new HashSet<>();
+		
+		Queue<MapNode> pq = new PriorityQueue<>( new Comparator<MapNode>() {
+			public int compare(MapNode node1, MapNode node2) {
+				return (distances.get(node1) > distances.get(node2)) ? 1 : -1;
+			}
+		});
+		
+		distances.put(startnode, 0.0);
+		pq.add(startnode);
+		
+		while(!pq.isEmpty()) {
+			
+			MapNode front = pq.remove();
+			visited.add(front);
+			if(front == goalnode) 
+				return pathBuilder(startnode,goalnode,parentMap);
+			
+			for(MapEdge edge: front.getEdges() ) {
+				MapNode neighbor = nodes.get(edge.getTo());
+				if(visited.contains(neighbor)) continue;
+				if(!distances.containsKey(neighbor) || 
+				   (distances.get(front) + edge.getLength() < distances.getOrDefault(neighbor,Double.MAX_VALUE)) )  {
+					
+					distances.put(neighbor, distances.get(front)+edge.getLength());
+					parentMap.put(neighbor, front);
+					pq.add(neighbor);
+					
+				}
+				nodeSearched.accept(neighbor.getLocation());
+			}
+		}
+		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 		
@@ -287,6 +325,52 @@ public class MapGraph {
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 4
+		
+		
+		HashMap<MapNode,MapNode> parentMap = new HashMap<>();
+		HashSet<MapNode> visited = new HashSet<>();
+		HashMap<MapNode,Double> distances = new HashMap<>();
+	
+		
+		Queue<MapNode> pq = new PriorityQueue<>(new Comparator<MapNode>() {
+			
+			public int compare(MapNode node1, MapNode node2) {
+				if ((distances.get(node1) + node1.getLocation().distance(goal)) >
+				    (distances.get(node2) + node2.getLocation().distance(goal)))
+					return 1;
+				return -1;
+			}
+			
+		});
+		
+		MapNode startnode = nodes.get(start);
+		MapNode goalnode = nodes.get(goal);
+		
+
+		distances.put(startnode, 0.0);
+		pq.add(startnode);
+		
+		while(!pq.isEmpty()) {
+			
+			MapNode front = pq.remove();
+			visited.add(front);
+			if(front == goalnode) 
+				return pathBuilder(startnode,goalnode,parentMap);
+			
+			for(MapEdge edge: front.getEdges() ) {
+				MapNode neighbor = nodes.get(edge.getTo());
+				if(visited.contains(neighbor)) continue;
+				if(!distances.containsKey(neighbor) || 
+				   (distances.get(front) + edge.getLength() < distances.getOrDefault(neighbor,Double.MAX_VALUE)) )  {
+					
+					distances.put(neighbor, distances.get(front)+edge.getLength());
+					parentMap.put(neighbor, front);
+					pq.add(neighbor);
+					
+				}
+				nodeSearched.accept(neighbor.getLocation());
+			}
+		}
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
